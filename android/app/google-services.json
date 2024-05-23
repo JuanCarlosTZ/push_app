@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "773166065643",
+    "firebase_url": "https://flutter-tz.firebaseio.com",
+    "project_id": "flutter-tz",
+    "storage_bucket": "flutter-tz.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:773166065643:android:18e77fb9b6c6ba0e2d1bae",
+        "android_client_info": {
+          "package_name": "com.juancarlostz.push_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "773166065643-unk8ffk10d1t8dh4ub48n0kq41793opq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAY1kDcnjRqSjw2IfTZbETMZEMKEXDj2M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "773166065643-unk8ffk10d1t8dh4ub48n0kq41793opq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
