@@ -4,13 +4,11 @@ abstract class NotificationEvent {}
 
 class AuthorizationStatusChanged extends NotificationEvent {
   final AuthorizationStatus status;
-
   AuthorizationStatusChanged(this.status);
 }
 
 class NotificationReciver extends NotificationEvent {
   final Post post;
-
   NotificationReciver(this.post);
 }
 

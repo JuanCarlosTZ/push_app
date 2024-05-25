@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:push_app/config/router/app_router.dart';
 import 'package:push_app/domain/entities/post.dart';
 import 'package:push_app/presentation/blocs/notification/notification_bloc.dart';
+import 'package:push_app/presentation/blocs/permission/permission_cubit.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -34,7 +35,7 @@ class HomeScreen extends StatelessWidget {
       actions: [
         IconButton(
             onPressed: () {
-              context.read<NotificationBloc>().requestAuthorization();
+              context.read<PermissionCubit>().requestAuthorization();
             },
             icon: const Icon(Icons.settings))
       ],
@@ -78,12 +79,7 @@ class _HomeViewState extends State<_HomeView> with WidgetsBindingObserver {
     return ListView.builder(
       itemCount: posts.length,
       itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () {
-            context.push(getDetailPath(posts[index].postId));
-          },
-          child: _PostItem(post: posts[index]),
-        );
+        return _PostItem(post: posts[index]);
       },
     );
   }
@@ -98,42 +94,34 @@ class _PostItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = Theme.of(context).textTheme;
     return Padding(
-      padding: const EdgeInsets.all(5),
-      child: SizedBox(
-        height: 150,
-        child: Row(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: ListTile(
+        //image
+        leading: ClipRRect(
+          clipBehavior: Clip.hardEdge,
+          borderRadius: BorderRadius.circular(5),
+          child: Image.network(post.urlImage),
+        ),
+
+        //content
+        title: Text(post.title, maxLines: 1, overflow: TextOverflow.ellipsis),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              width: 200,
-              child: ClipRRect(
-                clipBehavior: Clip.hardEdge,
-                borderRadius: BorderRadius.circular(20),
-                child: Image.network(post.urlImage),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 10, top: 10, bottom: 10),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      post.title,
-                      style: textStyle.titleLarge,
-                    ),
-                    Text(post.caption ?? ''),
-                    const Expanded(child: SizedBox()),
-                    Text('${post.published}')
-                  ],
-                ),
-              ),
-            ),
+            Text(post.caption ?? '',
+                maxLines: 2, overflow: TextOverflow.ellipsis),
+            Text('${post.published}'),
           ],
         ),
+
+        //Actions
+        trailing: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () async {
+              context.read<NotificationBloc>().handleRemoveNotification(post);
+            }),
+        onTap: () => context.push(getDetailPath(post.postId)),
       ),
     );
   }

@@ -3,19 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:push_app/config/router/app_router.dart';
 import 'package:push_app/config/theme/app_theme.dart';
+import 'package:push_app/presentation/blocs/handler/firebase_handler.dart';
 import 'package:push_app/presentation/blocs/notification/notification_bloc.dart';
+import 'package:push_app/presentation/blocs/permission/permission_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await NotificationBloc.initializeFCM();
+  await FirebaseHandler.initializeFCM();
 
   runApp(MultiBlocProvider(providers: [
-    BlocProvider(
-      create: (context) {
-        return NotificationBloc();
-      },
-    )
+    BlocProvider(create: (context) => NotificationBloc()),
+    BlocProvider(create: (context) => PermissionCubit()),
   ], child: const MainApp()));
 }
 
