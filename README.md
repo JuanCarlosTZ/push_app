@@ -14,3 +14,8 @@ A new Flutter project for practice push notification.
  - Execute the command line {dart pub global activate flutterfire_cli} for installing FlutterFire CLI. 
 
 04. Optional. firebase_options is already configured with the firebase project {flutter-tz}. if you want to reconfigure it execute de command line {flutterfire configure}
+
+05. Cambios en la entidad, hay que ejecutar el comando
+```
+flutter pub run build_runner build
+```

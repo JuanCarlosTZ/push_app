@@ -7,3 +7,14 @@ class AuthorizationStatusChanged extends NotificationEvent {
 
   AuthorizationStatusChanged(this.status);
 }
+
+class NotificationReciver extends NotificationEvent {
+  final Post post;
+
+  NotificationReciver(this.post);
+}
+
+class LoadNotifications extends NotificationEvent {
+  final List<Post> post;
+  LoadNotifications(this.post);
+}
