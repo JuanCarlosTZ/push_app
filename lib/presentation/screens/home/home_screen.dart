@@ -27,7 +27,7 @@ class HomeScreen extends StatelessWidget {
         children: [
           const Text('Push notificación'),
           context.select(
-            (NotificationBloc bloc) =>
+            (PermissionCubit bloc) =>
                 Text(bloc.state.status.toString(), style: textStyle.titleSmall),
           ),
         ],
@@ -69,6 +69,7 @@ class _HomeViewState extends State<_HomeView> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
 
     if (state == AppLifecycleState.resumed) {
+      context.read<PermissionCubit>().initialAuthorizationCheck();
       context.read<NotificationBloc>().loadPosts();
     }
   }

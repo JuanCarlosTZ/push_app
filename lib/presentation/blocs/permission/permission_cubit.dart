@@ -7,10 +7,10 @@ part 'permission_state.dart';
 class PermissionCubit extends Cubit<PermissionState> {
   final FirebaseMessaging messaging = FirebaseMessaging.instance;
   PermissionCubit() : super(const PermissionState()) {
-    _initialAuthorizationCheck();
+    initialAuthorizationCheck();
   }
 
-  void _initialAuthorizationCheck() async {
+  void initialAuthorizationCheck() async {
     final setting = await messaging.getNotificationSettings();
 
     emit(state.copyWith(status: setting.authorizationStatus));
