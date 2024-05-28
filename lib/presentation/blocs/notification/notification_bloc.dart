@@ -11,10 +11,17 @@ import 'package:push_app/infraestructure/repositories/local_post_repository_imp.
 part 'notification_event.dart';
 part 'notification_state.dart';
 
+typedef ShowLocalNotification = void Function(Post post);
+
 class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   final localRepository = LocalPostRepositoryImp(StoragedLocalPostDatasource());
+  final ShowLocalNotification? showLocalNotification;
+  final Stream<RemoteMessage>? onForengroundNotificationMessage;
 
-  NotificationBloc() : super(const NotificationState()) {
+  NotificationBloc({
+    this.showLocalNotification,
+    this.onForengroundNotificationMessage,
+  }) : super(const NotificationState()) {
     on<AuthorizationStatusChanged>(_authorizationStatusChanged);
     on<NotificationReciver>(_notificationReciver);
     on<LoadNotifications>(_loadNotifications);
@@ -41,20 +48,26 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     NotificationReciver event,
     Emitter<NotificationState> emit,
   ) async {
-    await _savePost(event.post);
-    List<Post> posts = [event.post, ...state.posts];
+    final isarId = await _savePost(event.post);
+    if (isarId == null) return;
+
+    final post = event.post.copyWith(isarId: isarId);
+    List<Post> posts = [post, ...state.posts];
+
+    if (showLocalNotification != null) showLocalNotification!(post);
 
     emit(state.copyWith(posts: posts));
   }
 
   void _initializeFirebaseForengroundMessaging() {
-    FirebaseMessaging.onMessage.listen(handleRemoteMessage);
+    onForengroundNotificationMessage?.listen(handleRemoteMessage);
   }
 
   void handleRemoteMessage(RemoteMessage message) {
     if (message.notification == null) return;
 
     final post = RemoteMessageModel.toPost(message);
+
     add(NotificationReciver(post));
   }
 
@@ -68,8 +81,8 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     return post;
   }
 
-  Future<void> _savePost(Post post) async {
-    await localRepository.savePost(post);
+  Future<int?> _savePost(Post post) async {
+    return await localRepository.savePost(post);
   }
 
   Future<void> _removePost(Post post) async {

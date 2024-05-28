@@ -35,6 +35,7 @@ class HomeScreen extends StatelessWidget {
       actions: [
         IconButton(
             onPressed: () {
+              // AppPermission().requestAuthorization();
               context.read<PermissionCubit>().requestAuthorization();
             },
             icon: const Icon(Icons.settings))

@@ -1,33 +1,28 @@
 import 'package:equatable/equatable.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:push_app/config/permission/app_permission.dart';
 
 part 'permission_state.dart';
 
 class PermissionCubit extends Cubit<PermissionState> {
   final FirebaseMessaging messaging = FirebaseMessaging.instance;
+  final appPermission = AppPermission();
+
   PermissionCubit() : super(const PermissionState()) {
     initialAuthorizationCheck();
   }
 
   void initialAuthorizationCheck() async {
-    final setting = await messaging.getNotificationSettings();
+    final status = await appPermission.authorizationCheck();
 
-    emit(state.copyWith(status: setting.authorizationStatus));
+    emit(state.copyWith(status: status));
   }
 
   void requestAuthorization() async {
-    NotificationSettings settings = await messaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: true,
-      provisional: false,
-      sound: true,
-    );
+    final status = await appPermission.requestAuthorization();
 
-    emit(state.copyWith(status: settings.authorizationStatus));
+    emit(state.copyWith(status: status));
     _getTokenFCM();
   }
 
